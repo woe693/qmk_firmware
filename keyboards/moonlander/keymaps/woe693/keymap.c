@@ -16,6 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//TODO
+// make under score the shift of space
+
 #include "config.h"
 #include "moonlander.h"
 #include "raw_hid.h"
@@ -37,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_EQL,     KC_1,            KC_2,           KC_3,        KC_4,             KC_5,    KC_GRAVE,                   XXXXXXX,  KC_6,   KC_7,            KC_8,      KC_9,     KC_0,              KC_MINS,
         KC_DEL,     KC_Q,            KC_W,           KC_E,        KC_R,             KC_T,    XXXXXXX,                    XXXXXXX,  KC_Y,   KC_U,            KC_I,      KC_O,     KC_P,              KC_BSLS,
         KC_BSPC,    LCTL_T(KC_A),    KC_S,           KC_D,        LSFT_T(KC_F),     KC_G,    KC_GRAVE,                   XXXXXXX,  KC_H,   RSFT_T(KC_J),    KC_K,      KC_L,     LCTL_T(KC_SCLN),   KC_QUOT,
-        XXXXXXX,    KC_Z,            KC_X,           KC_C,        KC_V,             KC_B,                                          KC_N,   KC_M,            KC_COMM,   KC_DOT,   KC_SLSH,           XXXXXXX,
+        XXXXXXX,    KC_Z,            KC_X,           KC_C,        KC_V,             KC_B,                                          KC_N,   KC_M,            KC_COMM,   KC_DOT,   KC_SLSH,           QK_LEAD,
         XXXXXXX,    XXXXXXX,         XXXXXXX,        XXXXXXX,     MO(WINNAV),                UNDO,                       KC_ESC,           MO(NAV),         QK_LEADER, KC_LBRC,  KC_RBRC,           TG(GAME),
 
                                                                   KC_SPC,           KC_BSPC, KC_LGUI,                    KC_LALT,  KC_TAB,  KC_ENT
@@ -72,3 +75,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                              XXXXXXX, STMOVLY, _______,               XXXXXXX, XXXXXXX, _______
     ),
 };
+
+
+void leader_start_user(void) 
+{
+    PLAY_SONG(leader_start_song);
+}
+
+void leader_end_user(void) 
+{
+    bool did_leader_succeed = false;
+
+    if (leader_sequence_one_key(KC_E)) {
+        SEND_STRING(SS_LCTL(SS_LSFT("t")));
+        did_leader_succeed = true;
+    } else if (leader_sequence_two_keys(KC_E, KC_D)) {
+        SEND_STRING(SS_LGUI("r") "cmd\n" SS_LCTL("c"));
+        did_leader_succeed = true;
+    }
+}
